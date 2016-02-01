@@ -14,6 +14,7 @@ websites.
 import logging
 logger = logging.getLogger(__name__)
 
+import re
 from pelican import signals
 
 __version__ = '0.2.1'
@@ -81,6 +82,9 @@ def add_publications(generator):
         bibdata_this = BibliographyData(entries={key: entry})
         Writer().write_stream(bibdata_this, bib_buf)
         text = formatted_entry.text.render(html_backend)
+        text = re.sub(r"\\emph\{(.*?)\}", r"<em>\1</em>", text)
+        text = text.replace("{", "") \
+                   .replace("}", "")
 
         publications.append((key,
                              year,
